@@ -9,8 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="mpizzle.gameoflifething.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:scrollbars="vertical">
+
+        <mpizzle.gameoflifething.PixelGridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pixelgrid" android:layout_width="wrap_content"
+            android:layout_height="fill_parent"/>
+
+    </ScrollView>
 </RelativeLayout>
