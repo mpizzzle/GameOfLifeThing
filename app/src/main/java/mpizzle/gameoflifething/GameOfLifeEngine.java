@@ -21,7 +21,7 @@ public class GameOfLifeEngine {
                 neighbours += grid[(((i + 1) % 1000) * 1000) + ((j + 1) % 1000)] ? 1 : 0;
                 neighbours += grid[(((i + 1) % 1000) * 1000) + ((j  - 1) > -1 ? (j  - 1) : 999)] ? 1 : 0;
                 neighbours += grid[(((i  - 1) > -1 ? (i  - 1) : 999) * 1000) + ((j + 1) % 1000)] ? 1 : 0;
-                neighbours += grid[(((i  - 1) > -1 ? (i  - 1) : 909) * 1000) + ((j  - 1) > -1 ? (j  - 1) : 999)] ? 1 : 0;
+                neighbours += grid[(((i  - 1) > -1 ? (i  - 1) : 999) * 1000) + ((j  - 1) > -1 ? (j  - 1) : 999)] ? 1 : 0;
 
                 if (((grid[(i * 1000) + j]) && (neighbours == 2 || neighbours == 3)) || (!(grid[(i * 1000) + j]) && (neighbours == 3))) {
                         newGrid[(i * 1000) + j] = true;

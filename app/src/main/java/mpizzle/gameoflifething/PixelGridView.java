@@ -16,10 +16,10 @@ import java.util.Random;
 public class PixelGridView extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
-    private Paint blackPaint = new Paint();
-    private Paint greenPaint = new Paint();
-    private Paint whitePaint = new Paint();
+    private Paint p = new Paint();
     private boolean[] grid;
+    private Random r;
+    int red, green, blue;
 
     public PixelGridView(Context context) {
         this(context, null);
@@ -28,21 +28,22 @@ public class PixelGridView extends View {
     public PixelGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        greenPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        greenPaint.setColor(Color.GREEN);
-        whitePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        whitePaint.setColor(Color.WHITE);
         this.numRows = 1000;
         this.numColumns = 1000;
         this.setWillNotDraw(false);
 
-        Random r = new Random();
+        r = new Random();
         r.setSeed(System.currentTimeMillis());
         grid = new boolean[numColumns * numRows];
         for (int i = 0; i < numColumns * numRows; ++i) {
             grid[i] = r.nextBoolean();
         }
+        red = r.nextInt(256);
+        green = r.nextInt(256);
+        blue = r.nextInt(256);
+
+        p.setStyle(Paint.Style.FILL_AND_STROKE);
+        p.setARGB(255, red, green, blue);
 
         this.cellWidth = 25;
         this.cellHeight = 25;
@@ -54,35 +55,26 @@ public class PixelGridView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.GRAY);
-
-        int width = getWidth();
-        int height = getHeight();
-
+        canvas.drawARGB(255, 256 - red, 256 - green, 256 - blue);
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
                 if (grid[(i * numColumns) + j]) {
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, greenPaint);
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, p);
                 }
             }
-        }
-
-        for (int i = 1; i < numColumns; i++) {
-            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, whitePaint);
-            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, whitePaint);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        //if (event.getAction() == MotionEvent.ACTION_DOWN) {
            // int x = (int)(event.getX() / cellWidth);
             //int y = (int)(event.getY() / cellHeight);
 
             //grid[(x * 100) + y] = !grid[(x * 100) + y];
             grid = GameOfLifeEngine.step(grid);
             invalidate();
-        }
+        //}
 
         return true;
     }
