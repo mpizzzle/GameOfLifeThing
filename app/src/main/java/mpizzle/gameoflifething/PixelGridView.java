@@ -3,7 +3,6 @@ package mpizzle.gameoflifething;
 import android.view.View;
 import android.graphics.Paint;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -53,9 +52,14 @@ public class PixelGridView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
+    public void setCustomIntProperty(int value){
+        grid = GameOfLifeEngine.step(grid);
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawARGB(255, 256 - red, 256 - green, 256 - blue);
+        canvas.drawARGB(255, 255 - red, 255 - green, 255 - blue);
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
                 if (grid[(i * numColumns) + j]) {
@@ -63,21 +67,13 @@ public class PixelGridView extends View {
                 }
             }
         }
-    }
+    }/*
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //if (event.getAction() == MotionEvent.ACTION_DOWN) {
-           // int x = (int)(event.getX() / cellWidth);
-            //int y = (int)(event.getY() / cellHeight);
-
-            //grid[(x * 100) + y] = !grid[(x * 100) + y];
-            grid = GameOfLifeEngine.step(grid);
             invalidate();
-        //}
-
         return true;
-    }
+    }*/
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
