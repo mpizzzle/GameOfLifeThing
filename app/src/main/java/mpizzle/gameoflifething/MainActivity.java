@@ -3,14 +3,14 @@ package mpizzle.gameoflifething;
 import android.animation.ObjectAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //setContentView(new PixelGridView(this));
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         PixelGridView p = (PixelGridView)findViewById(R.id.pixelgrid);
         ObjectAnimator anim = ObjectAnimator.ofInt(p, "customIntProperty", 0, 0);
