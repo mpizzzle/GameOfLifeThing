@@ -12,23 +12,23 @@ import java.util.Random;
 /**
  * Created by mpizzle on 01/04/17.
  */
-public class PixelGridView extends View {
+public class GameOfLifeView extends View {
     private Paint[][] palette;
     private Paint p;
     private boolean[][] currentGeneration;
     private boolean[][] nextGeneration;
-    private final int ROWS = 100;
-    private final int COLUMNS = 100;
-    private final int CELL_HEIGHT = 20;
-    private final int CELL_WIDTH = 20;
+    private final int ROWS = 1000;
+    private final int COLUMNS = 1000;
+    private final int CELL_HEIGHT = 15;
+    private final int CELL_WIDTH = 15;
     private final int SIZE_OF_PALETTE = 16;
     private final int PADDING = 2;
 
-    public PixelGridView(Context context) {
+    public GameOfLifeView(Context context) {
         this(context, null);
     }
 
-    public PixelGridView(Context context, AttributeSet attrs) {
+    public GameOfLifeView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         this.setWillNotDraw(false);
@@ -62,7 +62,8 @@ public class PixelGridView extends View {
 
     public void setCustomIntProperty(int value){
         currentGeneration = copyCells(currentGeneration);
-        currentGeneration = GameOfLifeEngine.step(currentGeneration, COLUMNS, ROWS);
+        nextGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
+        currentGeneration = GameOfLifeEngine.step(currentGeneration, nextGeneration, COLUMNS, ROWS);
         invalidate();
     }
 

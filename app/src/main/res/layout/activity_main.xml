@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <mpizzle.gameoflifething.PixelGridView xmlns:android="http://schemas.android.com/apk/res/android"
+            <mpizzle.gameoflifething.GameOfLifeView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/pixelgrid"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"

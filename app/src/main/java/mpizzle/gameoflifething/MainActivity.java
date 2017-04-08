@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        PixelGridView p = (PixelGridView)findViewById(R.id.pixelgrid);
+        GameOfLifeView p = (GameOfLifeView)findViewById(R.id.pixelgrid);
         ObjectAnimator anim = ObjectAnimator.ofInt(p, "customIntProperty", 0, 0);
         anim.setRepeatCount(ObjectAnimator.INFINITE);
         anim.start();
