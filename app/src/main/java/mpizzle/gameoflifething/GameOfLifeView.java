@@ -25,6 +25,7 @@ public class GameOfLifeView extends View {
     private Paint p;
     private CellMap cellMap;
     private int paletteOption;
+    private boolean drawGrid;
 
     public GameOfLifeView(Context context) {
         this(context, null);
@@ -49,25 +50,16 @@ public class GameOfLifeView extends View {
         }
 
         heatPalette = new Paint[SIZE_OF_PALETTE];
-        int increment = 0;
-        int decrement = 0;
-        boolean blep = true;
+        int brushes[] = new int[2];
+        int b = 0;
 
         for (int i = 0; i < SIZE_OF_PALETTE; ++i) {
             heatPalette[i] = new Paint();
-            heatPalette[i].setARGB(255, increment, 255 - decrement, 0);
-            if (blep) {
-                increment += 32;
-            }
-            else {
-                decrement += 32;
-            }
-            if (increment > 255) {
-                increment = 255;
-                blep = false;
-            }
-            if (decrement  <  0) {
-                decrement = 0;
+            heatPalette[i].setARGB(255, brushes[0], 255 - brushes[1], 0);
+            brushes[b] += 32;
+            if (brushes[b] > 255) {
+                brushes[b] = 255;
+                b = 1;
             }
         }
 
