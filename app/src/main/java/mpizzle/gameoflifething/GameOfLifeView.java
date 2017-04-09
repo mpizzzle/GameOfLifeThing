@@ -8,24 +8,24 @@ import android.util.AttributeSet;
 
 import java.util.Random;
 
+import static mpizzle.gameoflifething.CellMap.ROWS;
+import static mpizzle.gameoflifething.CellMap.COLUMNS;
+import static mpizzle.gameoflifething.CellMap.PADDING;
+
 /**
  * Created by mpizzle on 01/04/17.
  */
 public class GameOfLifeView extends View {
-    public static final int ROWS = 1000;
-    public static final int COLUMNS = 1000;
-    public static final int PADDING = 2;
+    public static final int SIZE_OF_PALETTE = 16;
+
+    private final int CELL_HEIGHT = 15;
+    private final int CELL_WIDTH = 15;
 
     private Paint[][] randomPalette;
     private Paint[] heatPalette;
     private Paint p;
-    private boolean[][] currentGeneration;
-    private boolean[][] nextGeneration;
-    private int[][] currentGenerationHeated;
-    private int[][] nextGenerationHeated;
-    private final int CELL_HEIGHT = 15;
-    private final int CELL_WIDTH = 15;
-    private final int SIZE_OF_PALETTE = 16;
+    private CellMap cellMap;
+    private int paletteOption;
 
     public GameOfLifeView(Context context) {
         this(context, null);
@@ -39,22 +39,7 @@ public class GameOfLifeView extends View {
         Random r = new Random();
         r.setSeed(System.currentTimeMillis());
 
-        currentGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
-
-        for (int i = 1; i <= COLUMNS; ++i) {
-            for (int j = 1; j <= ROWS; ++j) {
-                currentGeneration[i][j] = r.nextBoolean();
-            }
-        }
-
-        currentGenerationHeated = new int[COLUMNS + PADDING][ROWS + PADDING];
-
-        for (int i = 1; i <= COLUMNS; ++i) {
-            for (int j = 1; j <= ROWS; ++j) {
-                currentGenerationHeated[i][j] = r.nextInt(2);
-            }
-        }
-
+        cellMap = new CellMap(r);
         randomPalette = new Paint[SIZE_OF_PALETTE][SIZE_OF_PALETTE];
 
         for (int i = 0; i < SIZE_OF_PALETTE; ++i) {
@@ -89,6 +74,8 @@ public class GameOfLifeView extends View {
 
         p = new Paint();
         p.setARGB(255, 0, 255, 0);
+
+        paletteOption = 2;
     }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -96,10 +83,14 @@ public class GameOfLifeView extends View {
     }
 
     public void setCustomIntProperty(int value){
-        //nextGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
-        //currentGeneration = GameOfLifeEngine.step(currentGeneration, nextGeneration, COLUMNS, ROWS);
-        nextGenerationHeated = new int[COLUMNS + PADDING][ROWS + PADDING];
-        currentGenerationHeated = GameOfLifeEngine.step(currentGenerationHeated, nextGenerationHeated, COLUMNS, ROWS);
+        if (paletteOption < 2) {
+            cellMap.nextGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
+            cellMap.currentGeneration = GameOfLifeEngine.step(cellMap.currentGeneration, cellMap.nextGeneration, COLUMNS, ROWS);
+        }
+        else {
+            cellMap.nextGenerationHeated = new int[COLUMNS + PADDING][ROWS + PADDING];
+            cellMap.currentGenerationHeated = GameOfLifeEngine.step(cellMap.currentGenerationHeated, cellMap.nextGenerationHeated, COLUMNS, ROWS);
+        }
         invalidate();
     }
 
@@ -108,11 +99,22 @@ public class GameOfLifeView extends View {
         canvas.drawARGB(255, 0, 0, 0);
         for (int i = 1; i <= COLUMNS; i++) {
             for (int j = 1; j <= ROWS; j++) {
-                if (currentGenerationHeated[i][j] > 0) {
-                    //if (currentGeneration[i][j]) {
-                    //canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, p);
-                    //canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, randomPalette[i % SIZE_OF_PALETTE][j % SIZE_OF_PALETTE]);
-                    canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[currentGenerationHeated[i][j] - 1]);
+                switch (paletteOption) {
+                    case 0:
+                        if (cellMap.currentGeneration[i][j]) {
+                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, p);
+                        }
+                        break;
+                    case 1:
+                        if (cellMap.currentGeneration[i][j]) {
+                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, randomPalette[i % SIZE_OF_PALETTE][j % SIZE_OF_PALETTE]);
+                        }
+                        break;
+                    case 2:
+                        if (cellMap.currentGenerationHeated[i][j] > 0) {
+                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[cellMap.currentGenerationHeated[i][j] - 1]);
+                        }
+                        break;
                 }
             }
         }
