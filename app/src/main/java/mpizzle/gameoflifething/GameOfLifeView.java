@@ -17,12 +17,13 @@ import static mpizzle.gameoflifething.CellMap.PADDING;
  */
 public class GameOfLifeView extends View {
     private final int SIZE_OF_PALETTE = 16;
-    private final int CELL_HEIGHT = 15;
-    private final int CELL_WIDTH = 15;
+    private final int CELL_HEIGHT = 50;
+    private final int CELL_WIDTH = 50;
 
     private Paint[][] randomPalette;
     private Paint[] heatPalette;
     private Paint p;
+    private Paint line;
     private CellMap cellMap;
     private int paletteOption;
     private boolean drawGrid;
@@ -66,7 +67,11 @@ public class GameOfLifeView extends View {
         p = new Paint();
         p.setARGB(255, 0, 255, 0);
 
-        paletteOption = 2;
+        line = new Paint();
+        line.setARGB(128, 255, 255, 255);
+
+        paletteOption = 0;
+        drawGrid = true;
     }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -108,6 +113,16 @@ public class GameOfLifeView extends View {
                         }
                         break;
                 }
+            }
+
+            if (drawGrid) {
+                canvas.drawRect((i - 1) * CELL_WIDTH, 0, ((i - 1) * CELL_WIDTH) + 2, ROWS * CELL_HEIGHT, line);
+            }
+        }
+
+        if (drawGrid) {
+            for (int i = 1; i <= ROWS; i++) {
+                canvas.drawRect(0, (i - 1) * CELL_HEIGHT, COLUMNS * CELL_WIDTH, ((i - 1) * CELL_HEIGHT) + 2, line);
             }
         }
     }
