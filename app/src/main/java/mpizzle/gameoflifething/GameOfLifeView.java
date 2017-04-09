@@ -38,7 +38,7 @@ public class GameOfLifeView extends View {
         Random r = new Random();
         r.setSeed(System.currentTimeMillis());
 
-        cellMap = new CellMap(r);
+        cellMap = new CellMap(r, true);
         randomPalette = new Paint[SIZE_OF_PALETTE][SIZE_OF_PALETTE];
 
         for (int i = 0; i < SIZE_OF_PALETTE; ++i) {
@@ -84,11 +84,11 @@ public class GameOfLifeView extends View {
     public void setCustomIntProperty(int value){
         if (paletteOption < 2) {
             cellMap.nextGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
-            cellMap.currentGeneration = GameOfLifeEngine.step(cellMap.currentGeneration, cellMap.nextGeneration, COLUMNS, ROWS);
+            cellMap.currentGeneration = GameOfLifeEngine.step(cellMap.currentGeneration, cellMap.nextGeneration, ROWS, COLUMNS, cellMap.wrappingEnabled);
         }
         else {
             cellMap.nextGenerationHeated = new int[COLUMNS + PADDING][ROWS + PADDING];
-            cellMap.currentGenerationHeated = GameOfLifeEngine.step(cellMap.currentGenerationHeated, cellMap.nextGenerationHeated, COLUMNS, ROWS);
+            cellMap.currentGenerationHeated = GameOfLifeEngine.step(cellMap.currentGenerationHeated, cellMap.nextGenerationHeated, ROWS, COLUMNS, cellMap.wrappingEnabled);
         }
         invalidate();
     }

@@ -14,23 +14,17 @@ public class CellMap {
     public boolean[][] nextGeneration;
     public int[][] currentGenerationHeated;
     public int[][] nextGenerationHeated;
+    public boolean wrappingEnabled;
 
-    public CellMap(Random r) {
-        r = new Random();
-        r.setSeed(System.currentTimeMillis());
+    public CellMap(Random r, boolean wrappingEnabled) {
+        this.wrappingEnabled = wrappingEnabled;
 
         currentGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
-
-        for (int i = 1; i <= COLUMNS; ++i) {
-            for (int j = 1; j <= ROWS; ++j) {
-                currentGeneration[i][j] = r.nextBoolean();
-            }
-        }
-
         currentGenerationHeated = new int[COLUMNS + PADDING][ROWS + PADDING];
 
         for (int i = 1; i <= COLUMNS; ++i) {
             for (int j = 1; j <= ROWS; ++j) {
+                currentGeneration[i][j] = r.nextBoolean();
                 currentGenerationHeated[i][j] = r.nextInt(2);
             }
         }
