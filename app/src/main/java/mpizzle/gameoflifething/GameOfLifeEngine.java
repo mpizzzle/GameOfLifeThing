@@ -5,7 +5,6 @@ import java.util.Arrays;
 import static mpizzle.gameoflifething.CellMap.ROWS;
 import static mpizzle.gameoflifething.CellMap.COLUMNS;
 import static mpizzle.gameoflifething.CellMap.PADDING;
-import static mpizzle.gameoflifething.GameOfLifeView.SIZE_OF_PALETTE;
 
 /**
  * Created by mpizzle on 04/04/17.
@@ -49,7 +48,7 @@ public class GameOfLifeEngine {
                 neighbours += currentGen[i  - 1][j  - 1] > 0 ? 1 : 0;
 
                 if ((currentGen[i][j] > 0 && (neighbours == 2 || neighbours == 3)) || (!(currentGen[i][j] > 0) && neighbours == 3)) {
-                    nextGen[i][j] = (currentGen[i][j] != SIZE_OF_PALETTE) ? ((currentGen[i][j] + 1) % SIZE_OF_PALETTE) + 1 : SIZE_OF_PALETTE;
+                    nextGen[i][j] = currentGen[i][j] + 1;
                 }
             }
         }

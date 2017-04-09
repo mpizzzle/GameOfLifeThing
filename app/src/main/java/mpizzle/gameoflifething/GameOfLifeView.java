@@ -16,8 +16,7 @@ import static mpizzle.gameoflifething.CellMap.PADDING;
  * Created by mpizzle on 01/04/17.
  */
 public class GameOfLifeView extends View {
-    public static final int SIZE_OF_PALETTE = 16;
-
+    private final int SIZE_OF_PALETTE = 16;
     private final int CELL_HEIGHT = 15;
     private final int CELL_WIDTH = 15;
 
@@ -112,7 +111,8 @@ public class GameOfLifeView extends View {
                         break;
                     case 2:
                         if (cellMap.currentGenerationHeated[i][j] > 0) {
-                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[cellMap.currentGenerationHeated[i][j] - 1]);
+                            int paletteIdx = (cellMap.currentGenerationHeated[i][j] >= SIZE_OF_PALETTE) ? SIZE_OF_PALETTE - 1 : cellMap.currentGenerationHeated[i][j] - 1;
+                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[paletteIdx]);
                         }
                         break;
                 }
