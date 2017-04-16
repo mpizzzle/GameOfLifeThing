@@ -1,5 +1,7 @@
 package mpizzle.gameoflifething;
 
+import android.animation.ObjectAnimator;
+import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.Paint;
 import android.graphics.Canvas;
@@ -17,8 +19,9 @@ import static mpizzle.gameoflifething.CellMap.PADDING;
  */
 public class GameOfLifeView extends View {
     private final int SIZE_OF_PALETTE = 16;
-    private final int CELL_HEIGHT = 50;
-    private final int CELL_WIDTH = 50;
+    private int CELL_HEIGHT = 25;
+    private int CELL_WIDTH = 25;
+    private int LINE_WIDTH = 4;
 
     private Paint[][] randomPalette;
     private Paint[] heatPalette;
@@ -28,6 +31,8 @@ public class GameOfLifeView extends View {
     private int paletteOption;
     private boolean drawGrid;
 
+    public ObjectAnimator animator;
+
     public GameOfLifeView(Context context) {
         this(context, null);
     }
@@ -35,12 +40,10 @@ public class GameOfLifeView extends View {
     public GameOfLifeView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        this.setWillNotDraw(false);
-
         Random r = new Random();
         r.setSeed(System.currentTimeMillis());
 
-        cellMap = new CellMap(r, true);
+        cellMap = new CellMap(true, false);
         randomPalette = new Paint[SIZE_OF_PALETTE][SIZE_OF_PALETTE];
 
         for (int i = 0; i < SIZE_OF_PALETTE; ++i) {
@@ -70,7 +73,7 @@ public class GameOfLifeView extends View {
         line = new Paint();
         line.setARGB(128, 255, 255, 255);
 
-        paletteOption = 0;
+        paletteOption = 2;
         drawGrid = true;
     }
     @Override
@@ -78,7 +81,7 @@ public class GameOfLifeView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
-    public void setCustomIntProperty(int value){
+    public void setNextStep(int value){
         if (paletteOption < 2) {
             cellMap.nextGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
             cellMap.currentGeneration = GameOfLifeEngine.step(cellMap.currentGeneration, cellMap.nextGeneration, ROWS, COLUMNS, cellMap.wrappingEnabled);
@@ -116,15 +119,36 @@ public class GameOfLifeView extends View {
             }
 
             if (drawGrid) {
-                canvas.drawRect((i - 1) * CELL_WIDTH, 0, ((i - 1) * CELL_WIDTH) + 2, ROWS * CELL_HEIGHT, line);
+                canvas.drawRect((i - 1) * CELL_WIDTH, 0, ((i - 1) * CELL_WIDTH) + LINE_WIDTH, ROWS * CELL_HEIGHT, line);
             }
         }
 
         if (drawGrid) {
             for (int i = 1; i <= ROWS; i++) {
-                canvas.drawRect(0, (i - 1) * CELL_HEIGHT, COLUMNS * CELL_WIDTH, ((i - 1) * CELL_HEIGHT) + 2, line);
+                canvas.drawRect(0, (i - 1) * CELL_HEIGHT, COLUMNS * CELL_WIDTH, ((i - 1) * CELL_HEIGHT) + LINE_WIDTH, line);
             }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        if (!animator.isRunning()) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                int column = (int) (event.getX() / CELL_WIDTH) + 1;
+                int row = (int) (event.getY() / CELL_HEIGHT) + 1;
+
+                if (paletteOption < 2) {
+                    cellMap.currentGeneration[column][row] =  !cellMap.currentGeneration[column][row];
+                }
+                else {
+                    cellMap.currentGenerationHeated[column][row] = (cellMap.currentGenerationHeated[column][row] > 0) ? 0 : 1;
+                }
+                invalidate();
+            }
+        }
+
+        return true;
     }
 
     @Override

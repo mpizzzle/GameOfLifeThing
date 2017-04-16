@@ -6,22 +6,56 @@
     android:theme="@android:style/Theme.Black.NoTitleBar"
     tools:context="mpizzle.gameoflifething.MainActivity">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-
-        <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical">
 
-            <mpizzle.gameoflifething.GameOfLifeView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/pixelgrid"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:isScrollContainer="true"/>
-        </HorizontalScrollView>
+                android:layout_height="wrap_content">
 
-    </ScrollView>
+                <mpizzle.gameoflifething.GameOfLifeView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/pixelgrid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:isScrollContainer="true"/>
+            </HorizontalScrollView>
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:text="play"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/btn_play_pause"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:text=">"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/btn_frame_advance"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:text="settings"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/btn_settings"/>
+    </LinearLayout>
 </RelativeLayout>

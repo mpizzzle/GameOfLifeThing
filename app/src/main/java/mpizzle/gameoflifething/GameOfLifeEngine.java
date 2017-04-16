@@ -61,27 +61,39 @@ public class GameOfLifeEngine {
 
     private static boolean[][] copyCells(boolean[][] cellGrid)
     {
-        cellGrid[0] = Arrays.copyOf(cellGrid[COLUMNS - 1], ROWS + PADDING);
-        cellGrid[COLUMNS + 1] = Arrays.copyOf(cellGrid[1], ROWS + PADDING);
+        boolean[][] cellGridCopy = Arrays.copyOf(cellGrid, COLUMNS + PADDING);
+        cellGridCopy[0] = Arrays.copyOf(cellGridCopy[COLUMNS], ROWS + PADDING);
+        cellGridCopy[COLUMNS + 1] = Arrays.copyOf(cellGridCopy[1], ROWS + PADDING);
 
         for (int i = 1; i <= COLUMNS; ++i) {
-            cellGrid[i][0] = cellGrid[i][ROWS  - 1];
-            cellGrid[i][ROWS + 1] = cellGrid[i][1];
+            cellGridCopy[i][0] = cellGridCopy[i][ROWS];
+            cellGridCopy[i][ROWS + 1] = cellGridCopy[i][1];
         }
 
-        return cellGrid;
+        cellGridCopy[0][0] = cellGridCopy[COLUMNS][ROWS];
+        cellGridCopy[COLUMNS + 1][0] = cellGridCopy[1][ROWS];
+        cellGridCopy[0][ROWS + 1] = cellGridCopy[COLUMNS][1];
+        cellGridCopy[COLUMNS + 1][ROWS + 1] = cellGridCopy[1][1];
+
+        return cellGridCopy;
     }
 
     private static int[][] copyCells(int[][] cellGrid)
     {
-        cellGrid[0] = Arrays.copyOf(cellGrid[COLUMNS - 1], ROWS + PADDING);
-        cellGrid[COLUMNS + 1] = Arrays.copyOf(cellGrid[1], ROWS + PADDING);
+        int[][] cellGridCopy = Arrays.copyOf(cellGrid, COLUMNS + PADDING);
+        cellGridCopy[0] = Arrays.copyOf(cellGridCopy[COLUMNS], ROWS + PADDING);
+        cellGridCopy[COLUMNS + 1] = Arrays.copyOf(cellGridCopy[1], ROWS + PADDING);
 
         for (int i = 1; i <= COLUMNS; ++i) {
-            cellGrid[i][0] = cellGrid[i][ROWS  - 1];
-            cellGrid[i][ROWS + 1] = cellGrid[i][1];
+            cellGridCopy[i][0] = cellGridCopy[i][ROWS];
+            cellGridCopy[i][ROWS + 1] = cellGridCopy[i][1];
         }
 
-        return cellGrid;
+        cellGridCopy[0][0] = cellGridCopy[COLUMNS][ROWS];
+        cellGridCopy[COLUMNS + 1][0] = cellGridCopy[1][ROWS];
+        cellGridCopy[0][ROWS + 1] = cellGridCopy[COLUMNS][1];
+        cellGridCopy[COLUMNS + 1][ROWS + 1] = cellGridCopy[1][1];
+
+        return cellGridCopy;
     }
 }
