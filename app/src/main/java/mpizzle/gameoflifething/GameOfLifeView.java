@@ -30,6 +30,7 @@ public class GameOfLifeView extends View {
     private int paletteOption;
     private boolean drawGrid;
     private ObjectAnimator animator;
+    private Random r;
 
     public GameOfLifeView(Context context) {
         this(context, null);
@@ -38,7 +39,7 @@ public class GameOfLifeView extends View {
     public GameOfLifeView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        Random r = new Random();
+        r = new Random();
         r.setSeed(System.currentTimeMillis());
 
         cellMap = new CellMap(true, false);
@@ -71,7 +72,7 @@ public class GameOfLifeView extends View {
         line = new Paint();
         line.setARGB(128, 255, 255, 255);
 
-        paletteOption = 2;
+        paletteOption = 1;
         drawGrid = true;
     }
 
@@ -97,11 +98,11 @@ public class GameOfLifeView extends View {
                                 canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, p);
                             break;
                         case 1:
-                                canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, randomPalette[i % SIZE_OF_PALETTE][j % SIZE_OF_PALETTE]);
+                            int paletteIdx = (cellMap.getCellMap()[i][j] >= SIZE_OF_PALETTE) ? SIZE_OF_PALETTE - 1 : cellMap.getCellMap()[i][j] - 1;
+                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[paletteIdx]);
                             break;
                         case 2:
-                                int paletteIdx = (cellMap.getCellMap()[i][j] >= SIZE_OF_PALETTE) ? SIZE_OF_PALETTE - 1 : cellMap.getCellMap()[i][j] - 1;
-                                canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[paletteIdx]);
+                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, randomPalette[i % SIZE_OF_PALETTE][j % SIZE_OF_PALETTE]);
                             break;
                     }
                 }
@@ -155,8 +156,16 @@ public class GameOfLifeView extends View {
         this.cellMap.setWrappingEnabled(wrapping);
     }
 
-    public void setPalette(boolean paletteStyle) {
-        this.paletteOption = (paletteStyle) ? 2 : 0;
+    public void setPalette(int  paletteStyle) {
+        this.paletteOption = paletteStyle;
+        if (paletteOption == 2) {
+            for (int i = 0; i < SIZE_OF_PALETTE; ++i) {
+                for (int j = 0; j < SIZE_OF_PALETTE; ++j) {
+                    randomPalette[i][j] = new Paint();
+                    randomPalette[i][j].setARGB(255, r.nextInt(256), r.nextInt(256), r.nextInt(256));
+                }
+            }
+        }
         invalidate();
     }
 
