@@ -6,8 +6,8 @@ import java.util.Random;
  * Created by mpizzle on 09/04/17.
  */
 public class CellMap {
-    public static final int ROWS = 60;
-    public static final int COLUMNS = 30;
+    public static final int ROWS = 500;
+    public static final int COLUMNS = 500;
     public static final int PADDING = 2;
 
     private int[][] cellMap;
