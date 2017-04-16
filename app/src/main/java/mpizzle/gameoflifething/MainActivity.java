@@ -7,13 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         GameOfLifeView lifeView = (GameOfLifeView) findViewById(R.id.pixelgrid);
 
@@ -26,17 +26,19 @@ public class MainActivity extends AppCompatActivity {
 
         Button playPauseButton = (Button) findViewById(R.id.btn_play_pause);
         Button frameAdvanceButton = (Button) findViewById(R.id.btn_frame_advance);
+        Button randomizeButton = (Button) findViewById(R.id.randomize_button);
+        Button clearButton = (Button) findViewById(R.id.clear_button);
         Button settingsButton = (Button) findViewById(R.id.btn_settings);
-
-        setMainButtons(playPauseButton, frameAdvanceButton, settingsButton, animation);
 
         CheckBox wrappingCheckBox = (CheckBox) findViewById(R.id.wrapping_checkbox);
         CheckBox drawGridCheckBox = (CheckBox) findViewById(R.id.grid_checkbox);
-        CheckBox paletteCheckBox = (CheckBox) findViewById(R.id.heatmap_checkbox);
-        Button randomizeButton = (Button) findViewById(R.id.randomize_button);
-        Button clearButton = (Button) findViewById(R.id.clear_button);
 
-        setSettingsButtons(wrappingCheckBox, drawGridCheckBox, paletteCheckBox, randomizeButton, clearButton);
+        RadioButton palette1 = (RadioButton) findViewById(R.id.radio_single);
+        RadioButton palette2 = (RadioButton) findViewById(R.id.radio_heated);
+        RadioButton palette3 = (RadioButton) findViewById(R.id.radio_rainbow);
+
+        setMainButtons(playPauseButton, frameAdvanceButton, settingsButton,  animation);
+        setSettingsButtons(wrappingCheckBox, drawGridCheckBox, palette1, palette2, palette3, randomizeButton, clearButton);
     }
 
     private void setMainButtons(final Button playPause, final Button frameAdvance, final Button settings, final ObjectAnimator animation) {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setSettingsButtons(final CheckBox wrapping, final CheckBox grid, final CheckBox palette, final Button randomize, final Button clear) {
+    private void setSettingsButtons(final CheckBox wrapping, final CheckBox grid, final RadioButton palette1, final RadioButton palette2, final RadioButton palette3, final Button randomize, final Button clear) {
         wrapping.setChecked(true);
         wrapping.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,12 +97,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        palette.setChecked(true);
-        palette.setOnClickListener(new View.OnClickListener() {
+        palette2.setChecked(true);
+
+        palette1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GameOfLifeView lifeView = (GameOfLifeView) findViewById(R.id.pixelgrid);
-                lifeView.setPalette(palette.isChecked());
+                lifeView.setPalette(0);
+            }
+        });
+        palette2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GameOfLifeView lifeView = (GameOfLifeView) findViewById(R.id.pixelgrid);
+                lifeView.setPalette(1);
+            }
+        });
+        palette3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GameOfLifeView lifeView = (GameOfLifeView) findViewById(R.id.pixelgrid);
+                lifeView.setPalette(2);
             }
         });
 
