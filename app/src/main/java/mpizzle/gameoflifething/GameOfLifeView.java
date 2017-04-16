@@ -12,7 +12,6 @@ import java.util.Random;
 
 import static mpizzle.gameoflifething.CellMap.ROWS;
 import static mpizzle.gameoflifething.CellMap.COLUMNS;
-import static mpizzle.gameoflifething.CellMap.PADDING;
 
 /**
  * Created by mpizzle on 01/04/17.
@@ -43,7 +42,7 @@ public class GameOfLifeView extends View {
         Random r = new Random();
         r.setSeed(System.currentTimeMillis());
 
-        cellMap = new CellMap(true, false);
+        cellMap = new CellMap(true, true);
         randomPalette = new Paint[SIZE_OF_PALETTE][SIZE_OF_PALETTE];
 
         for (int i = 0; i < SIZE_OF_PALETTE; ++i) {
@@ -82,14 +81,7 @@ public class GameOfLifeView extends View {
     }
 
     public void setNextStep(int value){
-        if (paletteOption < 2) {
-            cellMap.nextGeneration = new boolean[COLUMNS + PADDING][ROWS + PADDING];
-            cellMap.currentGeneration = GameOfLifeEngine.step(cellMap.currentGeneration, cellMap.nextGeneration, ROWS, COLUMNS, cellMap.wrappingEnabled);
-        }
-        else {
-            cellMap.nextGenerationHeated = new int[COLUMNS + PADDING][ROWS + PADDING];
-            cellMap.currentGenerationHeated = GameOfLifeEngine.step(cellMap.currentGenerationHeated, cellMap.nextGenerationHeated, ROWS, COLUMNS, cellMap.wrappingEnabled);
-        }
+        cellMap.setCellMap(GameOfLifeEngine.step(cellMap));
         invalidate();
     }
 
@@ -98,23 +90,20 @@ public class GameOfLifeView extends View {
         canvas.drawARGB(255, 0, 0, 0);
         for (int i = 1; i <= COLUMNS; i++) {
             for (int j = 1; j <= ROWS; j++) {
-                switch (paletteOption) {
-                    case 0:
-                        if (cellMap.currentGeneration[i][j]) {
-                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, p);
-                        }
-                        break;
-                    case 1:
-                        if (cellMap.currentGeneration[i][j]) {
-                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, randomPalette[i % SIZE_OF_PALETTE][j % SIZE_OF_PALETTE]);
-                        }
-                        break;
-                    case 2:
-                        if (cellMap.currentGenerationHeated[i][j] > 0) {
-                            int paletteIdx = (cellMap.currentGenerationHeated[i][j] >= SIZE_OF_PALETTE) ? SIZE_OF_PALETTE - 1 : cellMap.currentGenerationHeated[i][j] - 1;
-                            canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[paletteIdx]);
-                        }
-                        break;
+
+                if (cellMap.getCellMap()[i][j] > 0) {
+                    switch (paletteOption) {
+                        case 0:
+                                canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, p);
+                            break;
+                        case 1:
+                                canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, randomPalette[i % SIZE_OF_PALETTE][j % SIZE_OF_PALETTE]);
+                            break;
+                        case 2:
+                                int paletteIdx = (cellMap.getCellMap()[i][j] >= SIZE_OF_PALETTE) ? SIZE_OF_PALETTE - 1 : cellMap.getCellMap()[i][j] - 1;
+                                canvas.drawRect((i - 1) * CELL_WIDTH, (j - 1) * CELL_HEIGHT, i * CELL_WIDTH, j * CELL_HEIGHT, heatPalette[paletteIdx]);
+                            break;
+                    }
                 }
             }
 
@@ -137,13 +126,7 @@ public class GameOfLifeView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int column = (int) (event.getX() / CELL_WIDTH) + 1;
                 int row = (int) (event.getY() / CELL_HEIGHT) + 1;
-
-                if (paletteOption < 2) {
-                    cellMap.currentGeneration[column][row] =  !cellMap.currentGeneration[column][row];
-                }
-                else {
-                    cellMap.currentGenerationHeated[column][row] = (cellMap.currentGenerationHeated[column][row] > 0) ? 0 : 1;
-                }
+                cellMap.getCellMap()[column][row] = (cellMap.getCellMap()[column][row] > 0) ? 0 : 1;
                 invalidate();
             }
         }
